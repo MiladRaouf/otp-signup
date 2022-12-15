@@ -1,7 +1,8 @@
 <?php
-
-require './constans.php';
-require './config.php';
+session_start();
+require 'constans.php';
+require 'config.php';
+require './libs/helper.php';
 
 try {
     $pdo = new PDO(
