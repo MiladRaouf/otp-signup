@@ -15,14 +15,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (!filter_var($params['email'], FILTER_VALIDATE_EMAIL)) {
             redirectAndSetMessage('Enter the valid email address', 'auth.php?action=register');
         }
+
+        if(isUserExists($params['phone'], $params['email'])){
+            redirectAndSetMessage('User Exists with this data', 'auth.php?action=register');
+        }
+        
+        if(createUser($params)) {
+            $_SESSION['email'] = $params['email'];
+            redirect('auth.php?action=verify');
+        }
     }
 }
 
 
 if (isset($_GET['action']) && $_GET['action'] == 'register')
     include 'templates/register.php';
+else if (isset($_GET['action']) && $_GET['action'] == 'verify')
+    include 'templates/verify.php';
 else
-    include 'templates/login.php';
-
-if (isset($_GET['action']) && $_GET['action'] == 'verify')
     include 'templates/login.php';

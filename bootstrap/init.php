@@ -3,6 +3,7 @@ session_start();
 require 'constans.php';
 require 'config.php';
 require './libs/helper.php';
+require './libs/authLib.php';
 
 try {
     $pdo = new PDO(
