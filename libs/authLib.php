@@ -56,3 +56,12 @@ function isAliveToken(string $hash): bool
 
     return strtotime($record->expired_at) > time() + 120;
 }
+
+function sendTokenByEmail(string $email, int|string $token): void
+{
+    global $mail;
+    $mail->addAddress($email, 'hello');
+    $mail->Subject = 'token for login';
+    $mail->Body = 'token for login: ' . $token;
+    $mail->send();
+}

@@ -20,9 +20,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 if (isset($_GET['action']) && $_GET['action'] == 'verify' && isset($_SESSION['email'])) {
     if (isset($_SESSION['hash']) && isAliveToken($_SESSION['hash'])) {
         # send old token
-    }else {
+        sendTokenByEmail($_SESSION['email'], $tokenResult['token']);
+    } else {
         $tokenResult = generateToken();
         $_SESSION['hash'] = $tokenResult['hash'];
+        sendTokenByEmail($_SESSION['email'], $tokenResult['token']);
     }
 
     include 'templates/verify.php';

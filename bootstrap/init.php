@@ -8,6 +8,8 @@ require 'config.php';
 require './libs/helper.php';
 require './libs/authLib.php';
 require './libs/validation.php';
+require BASE_PATH.'vendor/autoload.php';
+require 'mail.php';
 
 try {
     $pdo = new PDO(
