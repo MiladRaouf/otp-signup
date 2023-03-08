@@ -65,3 +65,37 @@ function sendTokenByEmail(string $email, int|string $token): void
     $mail->Body = 'token for login: ' . $token;
     $mail->send();
 }
+
+function issetToken(int $token, string $hash): bool
+{
+    global $pdo;
+
+    $sql = 'SELECT * FROM tokens WHERE token=:token AND hash=:hash;';
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([':token' => $token, ':hash' => $hash]);
+    $record = $stmt->fetch(PDO::FETCH_OBJ);
+
+    return !$record ? false : true;
+}
+
+function chengeLoginSession(string $session, string $email): bool
+{
+    global $pdo;
+
+    $sql = 'UPDATE users SET session = :session WHERE email = :email;';
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([":session" => $session, ":email" => $email]);
+
+    return $stmt->rowCount() ? true : false;
+}
+
+function deleteTokenByHash(string $hash): bool
+{
+    global $pdo;
+
+    $sql = 'DELETE FROM tokens WHERE hash=:hash;';
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([':hash' => $hash]);
+
+    return $stmt->rowCount() ? true : false;
+}

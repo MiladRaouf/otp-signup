@@ -29,7 +29,7 @@
 
                     <div class="card bg-glass">
                         <div class="card-body px-4 py-5 px-md-5">
-                            <form action="#" method="post">
+                            <form action="/auth.php?action=verify" method="post">
                                 <!-- Token input -->
                                 <div class="form-outline mb-4">
                                     <input type="text" name="token" id="token" class="form-control" />

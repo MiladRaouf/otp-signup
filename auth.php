@@ -15,12 +15,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             redirect('auth.php?action=verify');
         }
     }
+    
+    if ($action = 'verify') {
+        // var_dump(issetToken($params['token'], $_SESSION['hash']));
+        // include 'templates/verify.php';
+        // die();
+        
+        if (!issetToken($params['token'], $_SESSION['hash']))
+            redirectAndSetMessage('token not exist', 'auth.php?action=verify');
+
+        $session = bin2hex(random_bytes(32));
+
+        if (chengeLoginSession($session, $_SESSION['email'])) {
+            setcookie('user', $session, time() + 1728000, '/');
+            deleteTokenByHash($_SESSION['hash']);
+            unset($_SESSION['email'], $_SESSION['hash']);
+            redirect();
+        }
+    }
 }
 
 if (isset($_GET['action']) && $_GET['action'] == 'verify' && isset($_SESSION['email'])) {
     if (isset($_SESSION['hash']) && isAliveToken($_SESSION['hash'])) {
         # send old token
-        sendTokenByEmail($_SESSION['email'], $tokenResult['token']);
+        sendTokenByEmail($_SESSION['email'], findTokenByHash($_SESSION['hash'])->token);
     } else {
         $tokenResult = generateToken();
         $_SESSION['hash'] = $tokenResult['hash'];
