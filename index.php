@@ -2,7 +2,10 @@
 
 require "./bootstrap/init.php";
 
-if(empty($_COOKIE['user']))
+if (empty($_COOKIE['user']))
     redirect('/auth.php?action=login');
 
-echo 'hello from auth project';
+if (isset($_GET['action']) && $_GET['action'] == 'logout') {
+    logOut(getAuthenticatUserBySession($_COOKIE['user'])->email);
+}
+include './templates/index-tpl.php';

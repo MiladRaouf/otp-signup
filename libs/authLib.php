@@ -78,7 +78,7 @@ function issetToken(int $token, string $hash): bool
     return !$record ? false : true;
 }
 
-function chengeLoginSession(string $session, string $email): bool
+function chengeLoginSession(string|null $session = null, string $email): bool
 {
     global $pdo;
 
@@ -98,4 +98,22 @@ function deleteExpiredToken(): bool
     $stmt->execute();
 
     return $stmt->rowCount() ? true : false;
+}
+
+function getAuthenticatUserBySession(string $session): bool|object
+{
+    global $pdo;
+    $sql = 'SELECT * FROM users WHERE session = :session;';
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([':session' => $session]);
+    $record = $stmt->fetch(PDO::FETCH_OBJ);
+
+    return $record;
+}
+
+function logOut(string $email): void
+{
+    chengeLoginSession(null, email: $email);
+    setcookie('user', '', time() - 60, '/');
+    redirect('auth.php');
 }
