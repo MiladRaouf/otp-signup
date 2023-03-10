@@ -1,12 +1,12 @@
 <?php
 
-function isUserExists(int $mobile, string $email): bool
+function isUserExists(string $email): bool
 {
     global $pdo;
 
-    $sql = 'SELECT id FROM users WHERE mobile = :mobile OR email = :email;';
+    $sql = 'SELECT id FROM users WHERE email = :email;';
     $stmt = $pdo->prepare($sql);
-    $stmt->execute([':mobile' => $mobile, ':email' => $email]);
+    $stmt->execute([':email' => $email]);
     $records = $stmt->fetch(PDO::FETCH_OBJ);
 
     return $records ? true : false;
@@ -89,13 +89,13 @@ function chengeLoginSession(string $session, string $email): bool
     return $stmt->rowCount() ? true : false;
 }
 
-function deleteTokenByHash(string $hash): bool
+function deleteExpiredToken(): bool
 {
     global $pdo;
 
-    $sql = 'DELETE FROM tokens WHERE hash=:hash;';
+    $sql = 'DELETE FROM tokens WHERE expired_at < now();';
     $stmt = $pdo->prepare($sql);
-    $stmt->execute([':hash' => $hash]);
+    $stmt->execute();
 
     return $stmt->rowCount() ? true : false;
 }

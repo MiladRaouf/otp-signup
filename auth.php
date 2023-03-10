@@ -7,6 +7,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $action = $_GET['action'];
     $params = $_POST;
 
+    deleteExpiredToken();
+
     if ($action == 'register') {
         registerValidation($params);
 
@@ -15,12 +17,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             redirect('auth.php?action=verify');
         }
     }
-    
-    if ($action = 'verify') {
-        // var_dump(issetToken($params['token'], $_SESSION['hash']));
-        // include 'templates/verify.php';
-        // die();
-        
+
+    if ($action == 'login') {
+        loginValidation($params);
+
+        $_SESSION['email'] = $params['email'];
+        redirect('auth.php?action=verify');
+    }
+
+    if ($action == 'verify') {
         if (!issetToken($params['token'], $_SESSION['hash']))
             redirectAndSetMessage('token not exist', 'auth.php?action=verify');
 
@@ -28,7 +33,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         if (chengeLoginSession($session, $_SESSION['email'])) {
             setcookie('user', $session, time() + 1728000, '/');
-            deleteTokenByHash($_SESSION['hash']);
             unset($_SESSION['email'], $_SESSION['hash']);
             redirect();
         }

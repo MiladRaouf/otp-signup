@@ -29,7 +29,7 @@
 
                     <div class="card bg-glass">
                         <div class="card-body px-4 py-5 px-md-5">
-                            <form action="#" method="post">
+                            <form action="/auth.php?action=login" method="post">
 
                                 <!-- Email input -->
                                 <div class="form-outline mb-4">
